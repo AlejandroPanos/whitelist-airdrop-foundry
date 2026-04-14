@@ -44,4 +44,28 @@ contract WhitelistAirdrop is EIP712 {
             revert WhitelistAirdrop__AlreadyClaimed();
         }
     }
+
+    function getMessage(address _account, uint256 _amount) public view returns (bytes32) {
+        // Create the struct
+        AirdropClaim memory airdrop = AirdropClaim({account: _account, amount: _amount});
+
+        // Return the bytes32 hashed digest
+        bytes32 digest = _hashTypedDataV4(keccak256(abi.encode(MESSAGE_TYPEHASH, airdrop)));
+        return digest;
+    }
+
+    function _isValidSignature(address account, bytes32 digest, uint8 v, bytes32 r, bytes32 s)
+        internal
+        pure
+        returns (bool)
+    {
+        // Retrieve the signer
+        (address recovered,,) = ECDSA.tryRecover(digest, v, r, s);
+
+        // Check if signer matches
+        bool isSigner = recovered == account;
+
+        // Return the value
+        return isSigner;
+    }
 }
