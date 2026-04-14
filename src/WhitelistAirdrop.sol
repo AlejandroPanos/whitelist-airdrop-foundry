@@ -17,6 +17,15 @@ contract WhitelistAirdrop is EIP712 {
     bytes32 private immutable i_merkleRoot;
     IERC20 private immutable i_airdropToken;
 
+    mapping(address user => bool hasClaimed) s_hasClaimed;
+
+    bytes32 private constant MESSAGE_TYPEHASH = keccak256("AirdropClaim(address account, uint256 amount)");
+
+    struct AirdropClaim {
+        address account;
+        uint256 amount;
+    }
+
     /* Events */
     event Claim();
 
@@ -25,4 +34,6 @@ contract WhitelistAirdrop is EIP712 {
         i_merkleRoot = _merkleRoot;
         i_airdropToken = _airdropToken;
     }
+
+    /* Functions */
 }
