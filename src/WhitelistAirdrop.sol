@@ -38,6 +38,19 @@ contract WhitelistAirdrop is EIP712 {
     }
 
     /* Functions */
+    /**
+     * @notice This function allows a user to claim tokens
+     * @param _account The address of the user claiming
+     * @param _amount The amount the user wants to claim
+     * @param _merkleProof The list of sibling hashes needed
+     * to reconstruct the path up to the Merkle root
+     * @param v Used to recover the public key the user used
+     * @param r An x-coord in the elliptic curve
+     * @param s The signature proof value
+     * @dev The leaf gets hashed twice and concatenated to
+     * prevent preimage attacks
+     * @dev Uses the safeTransfer() function from IERC20
+     */
     function claim(address _account, uint256 _amount, bytes32[] calldata _merkleProof, uint8 v, bytes32 r, bytes32 s)
         external
     {
@@ -65,6 +78,13 @@ contract WhitelistAirdrop is EIP712 {
         i_airdropToken.safeTransfer(_account, _amount);
     }
 
+    /**
+     * @notice This is a helper function that allows us
+     * to get the bytes32 digest
+     * @param _account The account of the user that signs
+     * @param _amount The amount that the user wants to claim
+     * @return bytes32 Returns the bytes32 digest object
+     */
     function getMessage(address _account, uint256 _amount) public view returns (bytes32) {
         // Create the struct
         AirdropClaim memory airdrop = AirdropClaim({account: _account, amount: _amount});
@@ -74,16 +94,29 @@ contract WhitelistAirdrop is EIP712 {
         return digest;
     }
 
-    function _isValidSignature(address account, bytes32 digest, uint8 v, bytes32 r, bytes32 s)
+    /**
+     * @notice Internal function only to be called from
+     * within this contract to check if a signature is valid or not
+     * @param _account The account of the user we want to check
+     * @param _digest The bytes32 digest object calculated in getMessage()
+     * @param v Used to recover the public key the user used
+     * @param r An x-coord in the elliptic curve
+     * @param s The signature proof value
+     * @return bool Returns true if the actual signer is the account owner
+     * @dev This function uses the EDCSA tryRecover() function. This returns 2 params
+     * but we only need the first returned value which is the signer of the txn
+     * to compare it with the account passed as an argument and check they are equal
+     */
+    function _isValidSignature(address _account, bytes32 _digest, uint8 v, bytes32 r, bytes32 s)
         internal
         pure
         returns (bool)
     {
         // Retrieve the signer
-        (address recovered,,) = ECDSA.tryRecover(digest, v, r, s);
+        (address recovered,,) = ECDSA.tryRecover(_digest, v, r, s);
 
         // Check if signer matches
-        bool isSigner = recovered == account;
+        bool isSigner = recovered == _account;
 
         // Return the value
         return isSigner;
