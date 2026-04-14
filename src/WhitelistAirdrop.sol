@@ -7,6 +7,22 @@ import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract WhitelistAirdrop is EIP712 {
+    /* Library */
+    using SafeERC20 for IERC20;
+
+    /* Errors */
+    error WhitelistAirdrop__AlreadyClaimed();
+
+    /* State variables */
+    bytes32 private immutable i_merkleRoot;
+    IERC20 private immutable i_airdropToken;
+
+    /* Events */
+    event Claim();
+
     /* Constructor */
-    constructor() EIP712("Whitelist Airdrop", "1.0.0") {}
+    constructor(bytes32 _merkleRoot, IERC20 _airdropToken) EIP712("Whitelist Airdrop", "1.0.0") {
+        i_merkleRoot = _merkleRoot;
+        i_airdropToken = _airdropToken;
+    }
 }
