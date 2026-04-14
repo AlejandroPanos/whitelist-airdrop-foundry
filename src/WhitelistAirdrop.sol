@@ -121,4 +121,21 @@ contract WhitelistAirdrop is EIP712 {
         // Return the value
         return isSigner;
     }
+
+    /* Getter functions */
+    /**
+     * @notice Getter function that returns the merkle root bytes32 object
+     * @return bytes32 Returns the merkle root bytes32 object
+     */
+    function getMerkleRoot() external view returns (bytes32) {
+        return i_merkleRoot;
+    }
+
+    /**
+     * @notice Getter function that returns the IERC20 token
+     * @return IERC20 Returns the IERC20 token
+     */
+    function getAirdropToken() external view returns (IERC20) {
+        return i_airdropToken;
+    }
 }
