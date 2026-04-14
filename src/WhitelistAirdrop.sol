@@ -36,4 +36,12 @@ contract WhitelistAirdrop is EIP712 {
     }
 
     /* Functions */
+    function claim(address _account, uint256 _amount, bytes32[] calldata _merkleProof, uint8 v, bytes32 r, bytes32 s)
+        external
+    {
+        // Checks
+        if (s_hasClaimed[_account] == true) {
+            revert WhitelistAirdrop__AlreadyClaimed();
+        }
+    }
 }
