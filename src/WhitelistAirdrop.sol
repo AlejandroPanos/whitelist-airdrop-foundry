@@ -12,6 +12,8 @@ contract WhitelistAirdrop is EIP712 {
 
     /* Errors */
     error WhitelistAirdrop__AlreadyClaimed();
+    error WhitelistAirdrop__InvalidSignature();
+    error WhitelistAirdrop__InvalidProof();
 
     /* State variables */
     bytes32 private immutable i_merkleRoot;
@@ -27,7 +29,7 @@ contract WhitelistAirdrop is EIP712 {
     }
 
     /* Events */
-    event Claim();
+    event Claim(address indexed claimer);
 
     /* Constructor */
     constructor(bytes32 _merkleRoot, IERC20 _airdropToken) EIP712("Whitelist Airdrop", "1.0.0") {
@@ -43,6 +45,24 @@ contract WhitelistAirdrop is EIP712 {
         if (s_hasClaimed[_account] == true) {
             revert WhitelistAirdrop__AlreadyClaimed();
         }
+
+        if (!_isValidSignature(_account, getMessage(_account, _amount), v, r, s)) {
+            revert WhitelistAirdrop__InvalidSignature();
+        }
+
+        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(_account, _amount))));
+
+        if (!MerkleProof.verify(_merkleProof, i_merkleRoot, leaf)) {
+            revert WhitelistAirdrop__InvalidProof();
+        }
+
+        // Effects
+        s_hasClaimed[_account] == true;
+
+        emit Claim(_account);
+
+        // Interactions
+        i_airdropToken.safeTransfer(_account, _amount);
     }
 
     function getMessage(address _account, uint256 _amount) public view returns (bytes32) {
