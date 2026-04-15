@@ -39,6 +39,9 @@ contract Interactions is Script {
     /**
      * @notice This is a helper function that splits a signature into its 3 components (v, r, s)
      * @param _signature The signature created
+     * @return v Used to recover the public key the user used
+     * @return r An x-coord in the elliptic curve
+     * @return s The signature proof value
      */
     function _splitSignature(bytes memory _signature) internal pure returns (uint8 v, bytes32 r, bytes32 s) {
         if (_signature.length != 65) {
