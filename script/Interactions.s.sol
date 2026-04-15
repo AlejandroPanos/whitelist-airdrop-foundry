@@ -6,6 +6,9 @@ import {WhitelistAirdrop} from "src/WhitelistAirdrop.sol";
 import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
 
 contract Interactions is Script {
+    /* Errors */
+    error Interactions__InvalidSignatureLength();
+
     /* State variables */
     address private constant ACCOUNT = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     uint256 private constant AMOUNT = 25 * 1e18;
@@ -24,6 +27,18 @@ contract Interactions is Script {
         WhitelistAirdrop(airdrop).claim(ACCOUNT, AMOUNT, proof, v, r, s);
         vm.stopBroadcast();
         console.log("Airdrop Completed");
+    }
+
+    function splitSignature(bytes memory _signature) returns (uint8 v, bytes32 r, bytes32 s) {
+        if (_signature.length != 65) {
+            revert Interactions__InvalidSignatureLength();
+        }
+
+        assembly {
+            r := mload(add(sig, 32))
+            s := mload(add(sig, 64))
+            v := byte(0, mload(sig, 96))
+        }
     }
 
     function getMostRecentlyDeployed() internal returns (address) {
