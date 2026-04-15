@@ -18,7 +18,7 @@ contract Interactions is Script {
     bytes32[] private proof = [PROOF_ONE, PROOF_TWO];
 
     bytes private SIGNATURE =
-        hex"e6daba7e95f9099d91a9302ad015d956e1798978b0632a0eb8798d5e13f7f734407ba27caaded62631223d997180924ead95c3d5fe8e7953ba8658b91e115e051b";
+        hex"26119110b21f3d6cdf5a6da487c675aca3cb2d53cee21c1ea32fca136c2d32fc3bdacdde510f428f2471d04d4d6d61d5dd18a750f2a85004454e8edb464581eb1c";
 
     /* Functions */
     /**
