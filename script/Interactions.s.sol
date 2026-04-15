@@ -21,6 +21,13 @@ contract Interactions is Script {
         hex"e6daba7e95f9099d91a9302ad015d956e1798978b0632a0eb8798d5e13f7f734407ba27caaded62631223d997180924ead95c3d5fe8e7953ba8658b91e115e051b";
 
     /* Functions */
+    /**
+     * @notice This function acts as a user claiming their allocated amount of tokens
+     * @notice This function performs the following actions:
+     * 1. Splits the signature so it can be passed to the claim() function
+     * 2. Calls the claim() function with the specified params
+     * @param airdrop This is the address of the most recently deployer Airdrop contract
+     */
     function claim(address airdrop) public {
         vm.startBroadcast();
         (uint8 v, bytes32 r, bytes32 s) = splitSignature(SIGNATURE);
@@ -29,6 +36,10 @@ contract Interactions is Script {
         console.log("Airdrop Completed");
     }
 
+    /**
+     * @notice This is a helper function that splits a signature into its 3 components (v, r, s)
+     * @param _signature The signature created
+     */
     function splitSignature(bytes memory _signature) returns (uint8 v, bytes32 r, bytes32 s) {
         if (_signature.length != 65) {
             revert Interactions__InvalidSignatureLength();
@@ -41,7 +52,11 @@ contract Interactions is Script {
         }
     }
 
-    function getMostRecentlyDeployed() internal returns (address) {
+    /**
+     * @notice Function that returns the most recently deployed Airdrop contract
+     * @dev Uses the Fonudry DevOps package
+     */
+    function getMostRecentlyDeployed() internal {
         address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment("WhitelistAirdrop", block.chainid);
         claim(mostRecentlyDeployed);
     }
