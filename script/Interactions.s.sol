@@ -40,15 +40,15 @@ contract Interactions is Script {
      * @notice This is a helper function that splits a signature into its 3 components (v, r, s)
      * @param _signature The signature created
      */
-    function splitSignature(bytes memory _signature) returns (uint8 v, bytes32 r, bytes32 s) {
+    function splitSignature(bytes memory _signature) public returns (uint8 v, bytes32 r, bytes32 s) {
         if (_signature.length != 65) {
             revert Interactions__InvalidSignatureLength();
         }
 
         assembly {
-            r := mload(add(sig, 32))
-            s := mload(add(sig, 64))
-            v := byte(0, mload(sig, 96))
+            r := mload(add(_signature, 32))
+            s := mload(add(_signature, 64))
+            v := byte(0, mload(add(_signature, 96)))
         }
     }
 
