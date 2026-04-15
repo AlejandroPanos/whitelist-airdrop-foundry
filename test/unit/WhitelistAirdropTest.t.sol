@@ -51,4 +51,19 @@ contract WhitelistAirdropTest is Test {
         // Assert
         assertEq(endingBalance - initialBalance, AMOUNT);
     }
+
+    function testClaimRevertsIfAccountHasAlreadyClaimed() public {
+        // Arrange
+        bytes32 digest = airdrop.getMessage(user, AMOUNT);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(userPrivateKey, digest);
+
+        // Act
+        vm.prank(gasPayer);
+        airdrop.claim(user, AMOUNT, proof, v, r, s);
+        
+        // Assert
+        vm.prank(gasPayer);
+        vm.expectRevert(WhitelistAirdrop.WhitelistAirdrop__AlreadyClaimed.selector);
+        airdrop.claim(user, AMOUNT, proof, v, r, s);
+    }
 }

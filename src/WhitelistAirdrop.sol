@@ -70,7 +70,7 @@ contract WhitelistAirdrop is EIP712 {
         }
 
         // Effects
-        s_hasClaimed[_account] == true;
+        s_hasClaimed[_account] = true;
 
         emit Claim(_account);
 
