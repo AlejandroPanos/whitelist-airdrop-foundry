@@ -30,7 +30,7 @@ contract Interactions is Script {
      */
     function claim(address airdrop) public {
         vm.startBroadcast();
-        (uint8 v, bytes32 r, bytes32 s) = splitSignature(SIGNATURE);
+        (uint8 v, bytes32 r, bytes32 s) = _splitSignature(SIGNATURE);
         WhitelistAirdrop(airdrop).claim(ACCOUNT, AMOUNT, proof, v, r, s);
         vm.stopBroadcast();
         console.log("Airdrop Completed");
@@ -40,7 +40,7 @@ contract Interactions is Script {
      * @notice This is a helper function that splits a signature into its 3 components (v, r, s)
      * @param _signature The signature created
      */
-    function splitSignature(bytes memory _signature) public returns (uint8 v, bytes32 r, bytes32 s) {
+    function _splitSignature(bytes memory _signature) internal pure returns (uint8 v, bytes32 r, bytes32 s) {
         if (_signature.length != 65) {
             revert Interactions__InvalidSignatureLength();
         }
@@ -56,7 +56,7 @@ contract Interactions is Script {
      * @notice Function that returns the most recently deployed Airdrop contract
      * @dev Uses the Fonudry DevOps package
      */
-    function getMostRecentlyDeployed() internal {
+    function run() external {
         address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment("WhitelistAirdrop", block.chainid);
         claim(mostRecentlyDeployed);
     }
