@@ -147,4 +147,30 @@ contract WhitelistAirdropTest is Test {
         bytes32 secondDigest = airdrop.getMessage(user, AMOUNT);
         assertEq(digest, secondDigest);
     }
+
+    /* ========================= */
+    /* GETTER FUNCTION TESTING   */
+    /* ========================= */
+
+    function testGetMerkleRootReturnsCorrectRoot() public view {
+        assertEq(airdrop.getMerkleRoot(), MERKLE_ROOT);
+    }
+
+    function testGetAirdropTokenReturnsCorrectToken() public view {
+        assertEq(address(airdrop.getAirdropToken()), address(token));
+    }
+
+    function testGetClaimStatusReturnsFalseByDefault() public view {
+        assertEq(airdrop.getClaimStatus(user), false);
+    }
+
+    function testGetClaimStatusReturnsTrueAfterClaim() public {
+        bytes32 digest = airdrop.getMessage(user, AMOUNT);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(userPrivateKey, digest);
+
+        vm.prank(gasPayer);
+        airdrop.claim(user, AMOUNT, proof, v, r, s);
+
+        assertEq(airdrop.getClaimStatus(user), true);
+    }
 }
