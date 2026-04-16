@@ -36,6 +36,10 @@ contract Interactions is Script {
         console.log("Airdrop Completed");
     }
 
+    function setSignature(bytes memory _signature) external {
+        SIGNATURE = _signature;
+    }
+
     /**
      * @notice This is a helper function that splits a signature into its 3 components (v, r, s)
      * @param _signature The signature created
