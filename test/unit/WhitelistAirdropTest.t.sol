@@ -124,4 +124,15 @@ contract WhitelistAirdropTest is Test {
         bytes32 digest = airdrop.getMessage(user, AMOUNT);
         assert(digest != bytes32(0));
     }
+
+    function testGetMessaheProducesDifferentHashesForDifferentAccounts() public {
+        // Arrange
+        bytes32 userDigest = airdrop.getMessage(user, AMOUNT);
+
+        address randUser = makeAddr("randUser");
+        bytes32 randUserDigest = airdrop.getMessage(randUser, AMOUNT);
+
+        // Act / Assert
+        assert(userDigest != randUserDigest);
+    }
 }
