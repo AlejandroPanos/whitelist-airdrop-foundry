@@ -125,7 +125,7 @@ contract WhitelistAirdropTest is Test {
         assert(digest != bytes32(0));
     }
 
-    function testGetMessaheProducesDifferentHashesForDifferentAccounts() public {
+    function testGetMessageProducesDifferentHashesForDifferentAccounts() public {
         // Arrange
         bytes32 userDigest = airdrop.getMessage(user, AMOUNT);
 
@@ -134,5 +134,11 @@ contract WhitelistAirdropTest is Test {
 
         // Act / Assert
         assert(userDigest != randUserDigest);
+    }
+
+    function testGetMessageProducesDifferentHashesForDifferentAmounts() public view {
+        bytes32 digest = airdrop.getMessage(user, AMOUNT);
+        bytes32 modifiedDigest = airdrop.getMessage(user, AMOUNT + 1);
+        assert(digest != modifiedDigest);
     }
 }
