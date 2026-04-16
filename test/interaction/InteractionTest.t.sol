@@ -30,4 +30,20 @@ contract InteractionTest is Test {
         uint256 expectedBalance = 4 * AMOUNT;
         assertEq(token.balanceOf(address(airdrop)), expectedBalance);
     }
+
+    function testClaimantReceivesTokens() public {
+        // Generate fresh signature against the actual deployed contract address
+        uint256 claimantPrivKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+        bytes32 digest = airdrop.getMessage(CLAIM_ADDRESS, AMOUNT);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(claimantPrivKey, digest);
+        bytes memory signature = abi.encodePacked(r, s, v);
+
+        // Inject the fresh signature
+        interactions.setSignature(signature);
+
+        // Now claim
+        uint256 initialBalance = token.balanceOf(CLAIM_ADDRESS);
+        interactions.claim(address(airdrop));
+        assertEq(token.balanceOf(CLAIM_ADDRESS), initialBalance + AMOUNT);
+    }
 }
