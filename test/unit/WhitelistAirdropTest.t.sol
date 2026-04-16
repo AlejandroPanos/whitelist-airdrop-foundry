@@ -27,6 +27,9 @@ contract WhitelistAirdropTest is Test {
     uint256 userPrivateKey;
     address gasPayer;
 
+    /* Events */
+    event Claim(address indexed claimer);
+
     /* Set up function */
     function setUp() external {
         deployer = new DeployAirdrop();
@@ -96,5 +99,17 @@ contract WhitelistAirdropTest is Test {
         assertEq(statusBefore, false);
         assertEq(statusAfter, true);
         assert(statusBefore != statusAfter);
+    }
+
+    function testEmitsWhenAUserclaimsCorrectly() public {
+        // Arrange
+        bytes32 digest = airdrop.getMessage(user, AMOUNT);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(userPrivateKey, digest);
+
+        // Act
+        vm.prank(user);
+        vm.expectEmit(true, false, false, false);
+        emit Claim(user);
+        airdrop.claim(user, AMOUNT, proof, v, r, s);
     }
 }
