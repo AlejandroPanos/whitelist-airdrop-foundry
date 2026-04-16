@@ -151,7 +151,6 @@ contract WhitelistAirdropTest is Test {
     /* ========================= */
     /* GETTER FUNCTION TESTING   */
     /* ========================= */
-
     function testGetMerkleRootReturnsCorrectRoot() public view {
         assertEq(airdrop.getMerkleRoot(), MERKLE_ROOT);
     }
