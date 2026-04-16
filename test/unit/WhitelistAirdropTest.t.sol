@@ -60,7 +60,7 @@ contract WhitelistAirdropTest is Test {
         // Act
         vm.prank(gasPayer);
         airdrop.claim(user, AMOUNT, proof, v, r, s);
-        
+
         // Assert
         vm.prank(gasPayer);
         vm.expectRevert(WhitelistAirdrop.WhitelistAirdrop__AlreadyClaimed.selector);
