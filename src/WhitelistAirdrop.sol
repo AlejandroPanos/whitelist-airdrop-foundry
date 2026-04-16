@@ -138,4 +138,8 @@ contract WhitelistAirdrop is EIP712 {
     function getAirdropToken() external view returns (IERC20) {
         return i_airdropToken;
     }
+
+    function getClaimStatus(address _user) external view returns (bool) {
+        return s_hasClaimed[_user];
+    }
 }

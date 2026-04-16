@@ -80,4 +80,21 @@ contract WhitelistAirdropTest is Test {
         vm.expectRevert(WhitelistAirdrop.WhitelistAirdrop__InvalidProof.selector);
         airdrop.claim(user, AMOUNT, invalid_proof, v, r, s);
     }
+
+    function testHasClaimedChangesToTrue() public {
+        // Arrange
+        bytes32 digest = airdrop.getMessage(user, AMOUNT);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(userPrivateKey, digest);
+        bool statusBefore = airdrop.getClaimStatus(user);
+
+        // Act
+        vm.prank(user);
+        airdrop.claim(user, AMOUNT, proof, v, r, s);
+        bool statusAfter = airdrop.getClaimStatus(user);
+
+        // Assert
+        assertEq(statusBefore, false);
+        assertEq(statusAfter, true);
+        assert(statusBefore != statusAfter);
+    }
 }
