@@ -141,4 +141,10 @@ contract WhitelistAirdropTest is Test {
         bytes32 modifiedDigest = airdrop.getMessage(user, AMOUNT + 1);
         assert(digest != modifiedDigest);
     }
+
+    function testDigestIsDeterministic() public view {
+        bytes32 digest = airdrop.getMessage(user, AMOUNT);
+        bytes32 secondDigest = airdrop.getMessage(user, AMOUNT);
+        assertEq(digest, secondDigest);
+    }
 }
