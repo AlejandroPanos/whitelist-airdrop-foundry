@@ -20,8 +20,14 @@ contract InteractionTest is Test {
 
     /* Set up function */
     function setUp() external {
-        interacitions = new Interactions();
+        interactions = new Interactions();
         deployer = new DeployAirdrop();
         (airdrop, token) = deployer.run();
+    }
+
+    /* Testing functions */
+    function testDeployFundsAirdropContractCorrectly() public view {
+        uint256 expectedBalance = 4 * AMOUNT;
+        assertEq(token.balanceOf(address(airdrop)), expectedBalance);
     }
 }
