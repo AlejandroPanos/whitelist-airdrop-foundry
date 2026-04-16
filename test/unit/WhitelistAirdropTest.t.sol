@@ -42,6 +42,10 @@ contract WhitelistAirdropTest is Test {
     }
 
     /* Testing functions */
+
+    /* ========================= */
+    /* CLAIM FUNCTION TESTING    */
+    /* ========================= */
     function testUsersCanClaim() public {
         // Arrange
         uint256 initialBalance = token.balanceOf(user);
@@ -111,5 +115,13 @@ contract WhitelistAirdropTest is Test {
         vm.expectEmit(true, false, false, false);
         emit Claim(user);
         airdrop.claim(user, AMOUNT, proof, v, r, s);
+    }
+
+    /* ============================== */
+    /* GETMESSAGE FUNCTION TESTING    */
+    /* ============================== */
+    function testGetMessageReturnsANonZeroValue() public view {
+        bytes32 digest = airdrop.getMessage(user, AMOUNT);
+        assert(digest != bytes32(0));
     }
 }
