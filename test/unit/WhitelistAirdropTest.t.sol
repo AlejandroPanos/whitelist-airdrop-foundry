@@ -117,6 +117,35 @@ contract WhitelistAirdropTest is Test {
         airdrop.claim(user, AMOUNT, proof, v, r, s);
     }
 
+    /* ============== */
+    /* FUZZ TESTING   */
+    /* ============== */
+    function testFuzz_ClaimWithValidProofAndSignature(uint256 privateKey) public {
+        // Bound the private key
+        privateKey = bound(privateKey, 1, type(uint96).max);
+
+        // Get address derived from private key
+        address derivedUser = vm.addr(privateKey);
+
+        // Check if derived user is in whitelist
+        bool isWhitelisted = derivedUser == 0x6CA6d1e2D5347Bfab1d91e883F1915560e09129D
+            || derivedUser == 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+            || derivedUser == 0x2ea3970Ed82D5b30be821FAAD4a731D35964F7dd
+            || derivedUser == 0xf6dBa02C01AF48Cf926579F77C9f874Ca640D91D;
+
+        // Generate digest & sign
+        bytes32 digest = airdrop.getMessage(derivedUser, AMOUNT);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, digest);
+
+        // Assert
+        if (isWhitelisted) {
+            vm.assume(false);
+        } else {
+            vm.expectRevert(WhitelistAirdrop.WhitelistAirdrop__InvalidSignature.selector);
+            airdrop.claim(user, AMOUNT, proof, v, r, s);
+        }
+    }
+
     /* ============================== */
     /* GETMESSAGE FUNCTION TESTING    */
     /* ============================== */
