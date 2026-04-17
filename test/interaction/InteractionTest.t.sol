@@ -63,4 +63,19 @@ contract InteractionTest is Test {
         uint256 finalBalance = token.balanceOf(address(airdrop));
         assertEq(finalBalance, initialBalance - AMOUNT);
     }
+
+    function testStatusIsTrueAfterRunningClaim() public {
+        // Generate signature
+        uint256 claimantPrivKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+        bytes32 digest = airdrop.getMessage(CLAIM_ADDRESS, AMOUNT);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(claimantPrivKey, digest);
+        bytes memory signature = abi.encodePacked(r, s, v);
+
+        // Inject fresh signature
+        interactions.setSignature(signature);
+
+        // Arrange test and assert
+        interactions.claim(address(airdrop));
+        assertEq(airdrop.getClaimStatus(CLAIM_ADDRESS), true);
+    }
 }
