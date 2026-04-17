@@ -12,15 +12,14 @@ contract WhitelistAirdropHandler is Test {
     uint256 public s_totalClaimed;
     mapping(address user => bool hasClaimed) public s_hasClaimed;
 
-    bytes32 private constant MERKLE_ROOT = 0xaa5d581231e596618465a56aa0f5870ba6e20785fe436d5bfb82b08662ccc7c4;
     uint256 private constant AMOUNT = 25 * 1e18;
 
     bytes32 private constant PROOF_ONE = 0x0fd7c981d39bece61f7499702bf59b3114a90e66b51ba2c53abdf7b62986c00a;
     bytes32 private constant PROOF_TWO = 0xe5ebd1e1b5a5478a944ecab36a9a954ac3b6b8216875f6524caa7a1d87096576;
     bytes32[] private proof;
 
-    address user;
-    uint256 userPrivateKey;
+    address public user;
+    uint256 public userPrivateKey;
 
     /* Constructor */
     constructor(WhitelistAirdrop _airdrop) {
