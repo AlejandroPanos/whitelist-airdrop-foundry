@@ -141,7 +141,7 @@ contract WhitelistAirdrop is EIP712 {
 
     /**
      * @notice Getter function that returns the bool value for user claims
-     * @return IERC20 Returns the bool value for a user
+     * @return bool Returns the bool value for a user
      */
     function getClaimStatus(address _user) external view returns (bool) {
         return s_hasClaimed[_user];
