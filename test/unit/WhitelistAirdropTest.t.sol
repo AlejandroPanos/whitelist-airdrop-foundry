@@ -142,7 +142,7 @@ contract WhitelistAirdropTest is Test {
             vm.assume(false);
         } else {
             vm.expectRevert(WhitelistAirdrop.WhitelistAirdrop__InvalidSignature.selector);
-            airdrop.claim(user, AMOUNT, proof, v, r, s);
+            airdrop.claim(derivedUser, AMOUNT, proof, v, r, s);
         }
     }
 
