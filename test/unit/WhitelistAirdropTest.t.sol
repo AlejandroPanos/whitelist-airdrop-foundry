@@ -105,7 +105,7 @@ contract WhitelistAirdropTest is Test {
         assert(statusBefore != statusAfter);
     }
 
-    function testEmitsWhenAUserclaimsCorrectly() public {
+    function testEmitsWhenAUserClaimsCorrectly() public {
         // Arrange
         bytes32 digest = airdrop.getMessage(user, AMOUNT);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(userPrivateKey, digest);
@@ -141,7 +141,7 @@ contract WhitelistAirdropTest is Test {
         if (isWhitelisted) {
             vm.assume(false);
         } else {
-            vm.expectRevert(WhitelistAirdrop.WhitelistAirdrop__InvalidSignature.selector);
+            vm.expectRevert(WhitelistAirdrop.WhitelistAirdrop__InvalidProof.selector);
             airdrop.claim(derivedUser, AMOUNT, proof, v, r, s);
         }
     }
