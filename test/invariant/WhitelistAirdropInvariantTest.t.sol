@@ -28,7 +28,7 @@ contract WhitelistAirdropInvariantTest is Test {
         assertGe(token.balanceOf(address(airdrop)), totalDeposited - handler.s_totalClaimed());
     }
 
-    function invariant_invariant_claimStatusNeverReset() public view {
+    function invariant_claimStatusNeverReset() public view {
         address user = handler.user();
         if (handler.s_hasClaimed(user)) {
             assert(airdrop.getClaimStatus(user));
