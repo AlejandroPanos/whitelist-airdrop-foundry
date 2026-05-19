@@ -6,6 +6,10 @@ import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeE
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
+/**
+ * @title WhitelistAirdrop
+ * @author Alejandro Paños
+ */
 contract WhitelistAirdrop is EIP712 {
     /* Library */
     using SafeERC20 for IERC20;
