@@ -9,6 +9,8 @@ import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 /**
  * @title WhitelistAirdrop
  * @author Alejandro Paños
+ * @notice This is a contract that holds all the functionality
+ * to perform an airdrop of a specific token - called AirdropToken.
  */
 contract WhitelistAirdrop is EIP712 {
     /* Library */
